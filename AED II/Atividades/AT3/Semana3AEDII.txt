@@ -1,0 +1,29 @@
+int custoChaveMaisProxima(VERTICE* g, int i, int n) { //n = nº de nós do grafo
+    FILA f;
+    inicializarFila(&f);
+    g[i].flag = 1;
+    entrarFila(&f, i);
+    //Arranjo que armazena os pesos durante o caminho.
+    int pesoAcumulado[n];
+    for (int k=0; k<n; k++) { pesoAcumulado[k] = 0; } //No k-ésimo espaço do arranjo ficarão os pesos acumulados do nó k
+
+    while(f.inicio) {
+        i = sairFila(&f);
+        NO* p = g[i].inicio;
+        while (p) {
+
+            if(g[p->v].flag == 0) {
+                g[p->v].flag = 1;
+                pesoAcumulado[p->v] = pesoAcumulado[i] + p->peso; //O peso carregado pelo nó atual é igual ao peso acumulado do nó anterior a ele + seu próprio peso
+                entrarFila(&f, p->v);
+            }
+
+            if (g[p->v].temChave == true) {
+                return (pesoAcumulado[p->v]);  //A primeira chave que encontrar é a que queremos. Retorna o peso acumulado nela
+            }
+
+            p = p->prox;
+        }
+        g[i].flag = 2;
+    }
+}
